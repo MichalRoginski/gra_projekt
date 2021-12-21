@@ -40,17 +40,11 @@ export default class tBOI extends Phaser.Scene
 
         createKnightAnims(this.anims);
         this.knight = this.add.knight(128, 128, 'knight');
-        console.log(this.knight);
-        //this.knight = this.physics.add.sprite(128, 128, 'knight', 'knight_m_idle_anim_f0');
-        //this.knight.setScale(3);
-        //this.knight.body.setSize(this.knight.width*0.6, this.knight.height*0.2);
 
-       
         this.physics.add.collider(this.knight, walls);
 
         createFlyerAnims(this.anims);
         
-
         //const flyer = this.physics.add.sprite(310,310,'flyer','tiny_zombie_run_anim_f0');
         //flyer.setScale(2.5);
         //flyer.anims.play("flyer_run");
@@ -98,41 +92,8 @@ export default class tBOI extends Phaser.Scene
     }
 
     update(t: number, dt: number) {
-
-        if(!this.cursors || !this.knight)
-        {
-            return
+        if(this.knight){
+            this.knight.update(this.cursors);
         }
-
-        const speed = 300;
-        let velocityx: number;
-        let velocityy: number;
-        velocityx = 0;
-        velocityy = 0;
-        this.knight.setVelocity(0, 0);
-        
-        
-        if (this.cursors.left.isDown){
-            velocityx = -speed;
-            this.knight.setFlipX(true);
-        } else if (this.cursors.right.isDown){
-            velocityx = speed;
-            this.knight.setFlipX(false);
-        }
-        if (this.cursors.up.isDown){
-            velocityy = -speed;
-        } else if (this.cursors.down.isDown){
-            velocityy = speed;
-        }
-        if(velocityx != 0 && velocityy != 0){
-            velocityx/=1.42;
-            velocityy/=1.42;    
-        }
-        if(velocityx == 0 && velocityy == 0){
-            this.knight.anims.play('knight-idle');
-        } else{
-            this.knight.anims.play('knight-run', true);
-        }
-        this.knight.setVelocity(velocityx, velocityy);
     }
 }

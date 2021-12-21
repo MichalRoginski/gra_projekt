@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { Physics } from "phaser";
 
 declare global {
     namespace Phaser.GameObjects{
@@ -15,6 +15,46 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
     {
         super(scene, x, y, texture, frame)
         this.anims.play('knight-idle');
+    }
+
+    update(cursors: Phaser.Types.Input.Keyboard.CursorKeys){
+        
+        if(!cursors)
+        {
+            return
+        }
+
+        const speed = 300;
+        let velocityx: number;
+        let velocityy: number;
+        velocityx = 0;
+        velocityy = 0;
+        this.setVelocity(0, 0);
+        
+        
+        if (cursors.left.isDown){
+            velocityx = -speed;
+            this.setFlipX(true);
+        } else if (cursors.right.isDown){
+            velocityx = speed;
+            this.setFlipX(false);
+        }
+        if (cursors.up.isDown){
+            velocityy = -speed;
+        } else if (cursors.down.isDown){
+            velocityy = speed;
+        }
+        if(velocityx != 0 && velocityy != 0){
+            velocityx/=1.42;
+            velocityy/=1.42;    
+        }
+        if(velocityx == 0 && velocityy == 0){
+            this.anims.play('knight-idle');
+        } else{
+            this.anims.play('knight-run', true);
+        }
+        this.setVelocity(velocityx, velocityy);
+        
     }
 
 }
