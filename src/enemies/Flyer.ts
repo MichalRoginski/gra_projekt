@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-export default class Lizard extends Phaser.Physics.Arcade.Sprite{
+export default class Flyer extends Phaser.Physics.Arcade.Sprite{
     flipped:boolean = false;
     targetx = 100;
     targety = 100;
