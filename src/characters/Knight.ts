@@ -41,6 +41,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
     }
 
     preUpdate(t: number, dt: number){
+        
         switch (this.healthState)
         {
             case HealthState.IDLE:
@@ -93,19 +94,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
             velocityy = speed;
         }
 
-        if (cursors.left.isDown){
-            velocityx = -speed;
-            this.setFlipX(true);
-        } else if (dKey.isDown){
-            velocityx = speed;
-            this.setFlipX(false);
-        }
-        if (wKey.isDown){
-            velocityy = -speed;
-        } else if (sKey.isDown){
-            velocityy = speed;
-        }
-        
+
         if (cursors.left.isDown){
             this.setFlipX(true);
             if(Date.now()-this.lastShot>500){
@@ -136,7 +125,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
             this.anims.play('knight-idle');
         } else{
             
-            this.anims.play('knight-run', true);
+            this.anims.play('knight-run');
         }
         this.setVelocity(velocityx, velocityy);
     }
