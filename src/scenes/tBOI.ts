@@ -84,16 +84,14 @@ export default class tBOI extends Phaser.Scene
     }
 
     private handlePlayerEnemiesCollision(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject){
-        /*const flyer = obj2 as Flyer 
+        const flyer = obj1 as Flyer 
         
-        const dx = this.knight.x - flyer.x;
-        const dy = this.knight.y -  flyer.y;
+        const dx = this.knight.x-flyer.x;
+        const dy = this.knight.y-flyer.y;
 
-        const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(200);
+        const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(600);
 
-        this.knight.setVelocity(dir.x, dir.y);
-
-        this.hit = 1;*/
+        this.knight.handleDamage(dir);
     }
 
     update(t: number, dt: number) {
