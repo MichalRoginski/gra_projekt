@@ -93,20 +93,6 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
         } else if (sKey.isDown){
             velocityy = speed;
         }
-
-        if (cursors.left.isDown){
-            velocityx = -speed;
-            this.setFlipX(true);
-        } else if (dKey.isDown){
-            velocityx = speed;
-            this.setFlipX(false);
-        }
-        if (wKey.isDown){
-            velocityy = -speed;
-        } else if (sKey.isDown){
-            velocityy = speed;
-        }
-        
         if (cursors.left.isDown){
             this.setFlipX(true);
             if(Date.now()-this.lastShot>500){
