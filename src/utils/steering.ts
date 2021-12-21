@@ -53,7 +53,6 @@ const Shoot = (direction: string) =>{
 
 }
 
-} 
 export {
     Steer
 }
