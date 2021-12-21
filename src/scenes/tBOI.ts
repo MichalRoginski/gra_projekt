@@ -10,6 +10,7 @@ export default class tBOI extends Phaser.Scene
 {
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
     private knight!: Phaser.Physics.Arcade.Sprite
+    
 	constructor()
 	{
 		super('tBOI');
@@ -23,6 +24,7 @@ export default class tBOI extends Phaser.Scene
 
     create()
     {
+        this.physics.world.setFPS(240);
         console.log("<game>");
         const map = this.make.tilemap({key: 'debug_dungeon'});
         const tileset = map.addTilesetImage('debug_dungeon2', 'tiles');
@@ -45,10 +47,6 @@ export default class tBOI extends Phaser.Scene
 
         createFlyerAnims(this.anims);
         
-        //const flyer = this.physics.add.sprite(310,310,'flyer','tiny_zombie_run_anim_f0');
-        //flyer.setScale(2.5);
-        //flyer.anims.play("flyer_run");
-        //flyer.setFlipX(true);
 
         const flyers = this.physics.add.group({
             classType: Flyer
@@ -57,7 +55,6 @@ export default class tBOI extends Phaser.Scene
         flyers.get(320,320,"flyer");
         flyers.get(500,320,"flyer");
         flyers.get(320,400,"flyer");
-        
         flyers.children.each(p => {
             const flyer = p as Flyer;
             this.physics.add.collider(p, this.knight, this.handlePlayerEnemiesCollision, undefined, this);
@@ -69,11 +66,16 @@ export default class tBOI extends Phaser.Scene
                 } 
             })
         })
-
         flyers.children.each(p => {
             const flyer = p as Flyer;
             flyer.setTarget(this.knight);
         })
+
+        const friendlyProjectiles = this.physics.add.group({
+            classType: Phaser.Physics.Arcade.Image
+        })
+        this.physics.add.collider(friendlyProjectiles, flyers);
+        this.physics.add.collider(friendlyProjectiles, walls);
 
         debugDraw(walls, this); //comment/uncomment for drawing debug        
         console.log("</game>");
