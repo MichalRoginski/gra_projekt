@@ -46,11 +46,11 @@ export default class tBOI extends Phaser.Scene
         this.knight = this.add.knight(128, 128, 'knight');
 
         this.physics.add.collider(this.knight, walls);
-
-        createFlyerAnims(this.anims);
         
 
-        const flyers = this.physics.add.group({
+
+        createFlyerAnims(this.anims);
+                const flyers = this.physics.add.group({
             classType: Flyer
         })
         
