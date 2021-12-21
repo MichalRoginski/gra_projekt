@@ -78,7 +78,7 @@ export default class tBOI extends Phaser.Scene
         flyers.children.each(p => {
 
             const flyer = p as Flyer;
-            this.physics.add.collider(p, this.knight, this.handlePlayerEnenemiesCollision, undefined, this);
+            this.physics.add.collider(p, this.knight, this.handlePlayerEnemiesCollision, undefined, this);
             this.physics.add.collider(p, walls);
             flyers.children.each(x => {
                 const secondFlyer = x as Flyer;
@@ -96,7 +96,7 @@ export default class tBOI extends Phaser.Scene
         debugDraw(walls, this); //comment/uncomment for drawing debug        
         console.log("</game>");
     }
-    private handlePlayerEnenemiesCollision(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject){
+    private handlePlayerEnemiesCollision(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject){
         const flyer = obj2 as Flyer 
         
         const dx = this.knight.x
