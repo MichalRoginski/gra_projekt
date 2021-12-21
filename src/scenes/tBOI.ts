@@ -2,6 +2,8 @@ import Phaser from 'phaser'
 import {debugDraw} from "../utils/debug"
 import Flyer from "../enemies/Flyer"
 import {createFlyerAnims} from "../anims/FlyerAnim"
+import "../characters/Knight"
+import {createKnightAnims} from "../anims/KnightAnim"
 
 
 export default class tBOI extends Phaser.Scene
@@ -36,31 +38,18 @@ export default class tBOI extends Phaser.Scene
         this.cursors.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.cursors.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
-        this.knight = this.physics.add.sprite(128, 128, 'knight', 'knight_m_idle_anim_f0');
-        this.knight.setScale(3);
-        this.knight.body.setSize(this.knight.width*0.6, this.knight.height*0.2);
-        this.knight.body.setOffset(3, 20);
+        createKnightAnims(this.anims);
+        this.knight = this.add.knight(128, 128, 'knight');
+        console.log(this.knight);
+        //this.knight = this.physics.add.sprite(128, 128, 'knight', 'knight_m_idle_anim_f0');
+        //this.knight.setScale(3);
+        //this.knight.body.setSize(this.knight.width*0.6, this.knight.height*0.2);
 
-        this.anims.create({
-            key: 'knight-idle',
-            frames: [{ key: 'knight', frame:'knight_f_idle_anim_f0'}]
-        })
-
-        this.anims.create({
-            key: 'knight-run',
-            frames: this.anims.generateFrameNames('knight', { start:0, end:3, prefix:'knight_f_run_anim_f' }),
-            repeat: -1,
-            frameRate: 15
-        })
-
-        this.anims.create({
-            key: 'knight-hit',
-            frames: [{ key: 'knight', frame:'knight_m_hit_anim_f0'}]
-        })
-
+       
         this.physics.add.collider(this.knight, walls);
 
         createFlyerAnims(this.anims);
+        
 
         //const flyer = this.physics.add.sprite(310,310,'flyer','tiny_zombie_run_anim_f0');
         //flyer.setScale(2.5);
@@ -76,7 +65,6 @@ export default class tBOI extends Phaser.Scene
         flyers.get(320,400,"flyer");
         
         flyers.children.each(p => {
-
             const flyer = p as Flyer;
             this.physics.add.collider(p, this.knight, this.handlePlayerEnemiesCollision, undefined, this);
             this.physics.add.collider(p, walls);
@@ -97,12 +85,20 @@ export default class tBOI extends Phaser.Scene
         console.log("</game>");
     }
     private handlePlayerEnemiesCollision(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject){
-        const flyer = obj2 as Flyer 
+        /*const flyer = obj2 as Flyer 
         
-        const dx = this.knight.x
+        const dx = this.knight.x - flyer.x;
+        const dy = this.knight.y -  flyer.y;
+
+        const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(200);
+
+        this.knight.setVelocity(dir.x, dir.y);
+
+        this.hit = 1;*/
     }
 
     update(t: number, dt: number) {
+
         if(!this.cursors || !this.knight)
         {
             return
