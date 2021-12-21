@@ -1,4 +1,5 @@
-import Phaser, { Physics } from "phaser";
+import Phaser, { Data, Physics, Time } from "phaser";
+import Arrow from "../characters/Arrow"
 
 declare global {
     namespace Phaser.GameObjects{
@@ -11,19 +12,27 @@ declare global {
 
 export default class Knight extends Phaser.Physics.Arcade.Sprite
 {
+    private lastShot = Date.now();
+    private friendlyProjectiles?: Phaser.Physics.Arcade.Group;
+    private power = 50;
     constructor(scene: Phaser.Scene, x:number, y:number, texture:string, frame?:string | number)
     {
         super(scene, x, y, texture, frame)
         this.anims.play('knight-idle');
     }
-
-    update(cursors: Phaser.Types.Input.Keyboard.CursorKeys){
-        
+    public setFriendlyProjectiles(projectiles: Phaser.Physics.Arcade.Group){
+        this.friendlyProjectiles = projectiles;
+    }
+    update(cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene){
         if(!cursors)
         {
             return
         }
-
+        let aKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        let sKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        let dKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        let wKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        
         const speed = 300;
         let velocityx: number;
         let velocityy: number;
@@ -31,19 +40,40 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
         velocityy = 0;
         this.setVelocity(0, 0);
         
-        
-        if (cursors.left.isDown){
+        if (aKey.isDown){
             velocityx = -speed;
             this.setFlipX(true);
-        } else if (cursors.right.isDown){
+        } else if (dKey.isDown){
             velocityx = speed;
             this.setFlipX(false);
         }
-        if (cursors.up.isDown){
+        if (wKey.isDown){
             velocityy = -speed;
-        } else if (cursors.down.isDown){
+        } else if (sKey.isDown){
             velocityy = speed;
         }
+        
+        if (cursors.left.isDown){
+            this.setFlipX(true);
+            if(Date.now()-this.lastShot>500){
+                this.Shoot("left");
+                this.lastShot = Date.now();
+            }            
+        } else if (cursors.right.isDown){
+            this.setFlipX(false);
+            if(Date.now()-this.lastShot>500){
+                this.Shoot("right");
+                this.lastShot = Date.now();
+            }
+        }
+        if (Date.now()-this.lastShot>500&&cursors.up.isDown){
+            this.Shoot("up");
+            this.lastShot = Date.now();
+        } else if (Date.now()-this.lastShot>500&&cursors.down.isDown){
+            this.Shoot("down");
+            this.lastShot = Date.now();
+        }
+
         if(velocityx != 0 && velocityy != 0){
             velocityx/=1.42;
             velocityy/=1.42;    
@@ -56,7 +86,31 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
         this.setVelocity(velocityx, velocityy);
         
     }
-
+    private Shoot(direction: string){
+        if(this.friendlyProjectiles==undefined){
+            return;
+        }
+        let angle, x=0, y=0;
+        if(direction=="up"){
+            angle=-Math.PI/2;
+            y=-1000;
+        }else if(direction=="down"){
+            angle=Math.PI/2;
+            y=1000;
+        }else if(direction=="left"){
+            angle=Math.PI;
+            x=-1000;
+        }else if(direction=="right"){
+            angle=0;
+            x=1000;
+        }
+        const arrow = this.friendlyProjectiles.get(this.x, this.y, "arrow") as Arrow;
+        //console.log(arrow);
+        //arrow.setDamage(this.power);
+        arrow.setScale(2);
+        arrow.setRotation(angle);
+        arrow.setVelocity(x,y);
+    }
 }
 
 Phaser.GameObjects.GameObjectFactory.register('knight', function (this:Phaser.GameObjects.GameObjectFactory, x: number, y:number, texture:string, frame?:string|number){
