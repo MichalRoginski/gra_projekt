@@ -28,8 +28,6 @@ export default class tBOI extends Phaser.Scene
         const walls = map.createLayer("walls", tileset);
         walls.setCollisionByProperty({collides:true});
 
-        const knight = this.add.sprite(128, 128, 'knight', 'knight_m_idle_anim_f0');
-
         walls.setScale(3);
         ground.setScale(3);
 
@@ -63,8 +61,6 @@ export default class tBOI extends Phaser.Scene
 
         this.physics.add.collider(this.knight, walls);
 
-        knight.setScale(3);
-
 
         createFlyerAnims(this.anims);
 
@@ -77,6 +73,11 @@ export default class tBOI extends Phaser.Scene
             classType: Flyer
         })
         const flyer1 = flyers.get(320,320,"flyer");
+
+        flyers.children.each(p => {
+            const flyer = p as Flyer;
+            flyer.setTarget(this.knight);
+        })
 
         debugDraw(walls, this); //comment/uncomment for drawing debug        
         console.log("</game>");
