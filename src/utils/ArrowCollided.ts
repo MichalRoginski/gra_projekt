@@ -8,8 +8,7 @@ const ArrowEnemyCollisionHandler = (obj1: Phaser.GameObjects.GameObject, obj2: P
     obj1.destroy();
     const enemy = obj2 as Flyer;
     const projectile = obj1 as Arrow;
-    
-    enemy.hit(projectile.getDamage());
+    enemy.hit(50);
 }
 export {
     ArrowWallCollisionHandler,

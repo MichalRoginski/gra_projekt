@@ -6,7 +6,7 @@ import {createKnightAnims} from "../anims/KnightAnim"
 import "../characters/Knight"
 import Knight from '../characters/Knight'
 import {ArrowEnemyCollisionHandler, ArrowWallCollisionHandler} from "../utils/ArrowCollided"
-
+import Arrow from '~/characters/Arrow'
 
 export default class tBOI extends Phaser.Scene
 {
@@ -74,7 +74,7 @@ export default class tBOI extends Phaser.Scene
         })
 
         const friendlyProjectiles = this.physics.add.group({
-            classType: Phaser.Physics.Arcade.Image
+            classType: Arrow
         })
         this.physics.add.collider(friendlyProjectiles, flyers, ArrowEnemyCollisionHandler);
         this.physics.add.collider(friendlyProjectiles, walls, ArrowWallCollisionHandler);

@@ -14,7 +14,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
 {
     private lastShot = Date.now();
     private friendlyProjectiles?: Phaser.Physics.Arcade.Group;
-    private power = 50;
+    private power = 34;
     constructor(scene: Phaser.Scene, x:number, y:number, texture:string, frame?:string | number)
     {
         super(scene, x, y, texture, frame)
@@ -105,8 +105,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
             x=1000;
         }
         const arrow = this.friendlyProjectiles.get(this.x, this.y, "arrow") as Arrow;
-        //console.log(arrow);
-        //arrow.setDamage(this.power);
+        arrow.setDamage(this.power);
         arrow.setScale(2);
         arrow.setRotation(angle);
         arrow.setVelocity(x,y);
