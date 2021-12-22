@@ -7,6 +7,11 @@ export default class Preloader extends Phaser.Scene{
     preload(){
         this.load.image('tiles', 'tiles/ground_walls.png');
         this.load.tilemapTiledJSON('debug_dungeon','tiles/debug_dungeon.json');
+        this.load.tilemapTiledJSON('dungeon_0','tiles/dungeon_0.json');
+        this.load.tilemapTiledJSON('dungeon_3','tiles/dungeon_3.json');
+        this.load.tilemapTiledJSON('dungeon_4','tiles/dungeon_4.json');
+        this.load.tilemapTiledJSON('dungeon_5','tiles/dungeon_5.json');
+        this.load.tilemapTiledJSON('dungeon_1','tiles/dungeon_1.json');
         
         this.load.atlas('knight', 'character/knight.png', 'character/knight_atlas.json');
 
@@ -27,7 +32,7 @@ export default class Preloader extends Phaser.Scene{
     }
     create(){
         console.log("<preload>");
-        this.scene.start('tBOI');
+        this.scene.start('tBOI_2');
         console.log("</preload>");
     }
 }

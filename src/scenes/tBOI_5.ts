@@ -16,7 +16,7 @@ import Shooter from '../enemies/Shooter'
 import { createShooterAnims } from '../anims/ShooterAnim'
 import Magic from '~/enemies/Magic'
 
-export default class tBOI extends Phaser.Scene
+export default class tBOI_5 extends Phaser.Scene
 {
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
     private knight!: Knight
@@ -29,7 +29,7 @@ export default class tBOI extends Phaser.Scene
     
 	constructor()
 	{
-		super('tBOI');
+		super('tBOI_5');
 	}
 
 	preload()
@@ -43,7 +43,7 @@ export default class tBOI extends Phaser.Scene
         this.scene.run('game-ui');
         this.physics.world.setFPS(240);
         console.log("<game>");
-        const map = this.make.tilemap({key: 'dungeon_1'});
+        const map = this.make.tilemap({key: 'dungeon_5'});
         const tileset = map.addTilesetImage('ground_walls', 'tiles');
         const ground = map.createLayer("ground", tileset);
         const border = this.add.layer();
@@ -148,7 +148,7 @@ export default class tBOI extends Phaser.Scene
         const spikes = this.physics.add.group({
             classType: Spike
         })
-        const test = spikes.get(600,600,"spike");
+        //const test = spikes.get(600,600,"spike");
         this.physics.add.collider(spikes, this.knight, handlePlayerSpikeCollision);
 
         createShooterAnims(this.anims);
@@ -224,19 +224,13 @@ export default class tBOI extends Phaser.Scene
         if(this.open==false&&this.shooters.getLength()<=0&&this.flyers.getLength()<=0){
             this.borders.children.each(p => {
                 const border = p as Phaser.Physics.Arcade.Sprite;
-                let teleport;
                 if(border.x<100){
                     border.x-=46;
-                    teleport = "tBOI";
                 } else if(border.x>1000){
                     border.x+=46;
-                    teleport = "tBOI_4";
                 } else if(border.y<100){
                     border.y-=46;
-                    teleport = "tBOI_3";
-                } else{ border.y+=46;
-                    teleport = "tBOI_5";
-                }
+                } else border.y+=46;
                 const exit = this.physics.add.sprite(border.x,border.y,"spike","floor_spikes_anim_f3");
                 exit.setScale(3);
                 this.physics.add.collider(this.knight, exit,() => {

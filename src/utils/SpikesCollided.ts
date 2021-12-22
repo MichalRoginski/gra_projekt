@@ -8,6 +8,8 @@ const handlePlayerSpikeCollision = (obj1: Phaser.GameObjects.GameObject, obj2: P
     const knight = obj1 as Knight
     const spike = obj2 as Spike
 
+    spike.setVelocity(0,0);
+
     const dx = (knight.x+3)-spike.x;
     const dy = (knight.y+20)-spike.y;
 

@@ -11,8 +11,6 @@ const handlePlayerEnemiesCollision = (obj1: Phaser.GameObjects.GameObject, obj2:
     const dy = (knight.y+20)-flyer.y;
     
     const dir = new Phaser.Math.Vector2(dx, dy).normalize();
-    console.log(flyer);
-    console.log(knight);
     knight.handleDamage(dir);
     sceneEvents.emit('player-health-change', knight.health);
 }
@@ -30,6 +28,8 @@ const handlePlayerShooterCollision = (obj1: Phaser.GameObjects.GameObject, obj2:
 const handlePlayerProjectileCollision = (obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) =>{
     const projectile = obj2 as Magic
     const knight = obj1 as Knight
+
+    knight.setVelocity(0,0);
 
     const dx = (knight.x+3)-projectile.x;
     const dy = (knight.y+20)-projectile.y;

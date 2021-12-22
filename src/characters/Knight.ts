@@ -180,7 +180,7 @@ Phaser.GameObjects.GameObjectFactory.register('knight', function (this:Phaser.Ga
 
     this.scene.physics.world.enableBody(sprite, Phaser.Physics.Arcade.DYNAMIC_BODY);
 
-    sprite.setImmovable();
+    //sprite.setImmovable();
     sprite.setScale(3);
     sprite.setSize(sprite.width*0.6, sprite.height*0.2);
     sprite.body.setOffset(3, 20);
