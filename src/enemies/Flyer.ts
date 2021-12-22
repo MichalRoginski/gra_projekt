@@ -4,6 +4,7 @@ export default class Flyer extends Phaser.Physics.Arcade.Sprite{
     targetx = 100;
     targety = 100;
     health = 100;
+    time = Date.now();
     private target?: Phaser.Physics.Arcade.Sprite;
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string|number){
         super(scene,x,y,texture,frame);
@@ -22,6 +23,13 @@ export default class Flyer extends Phaser.Physics.Arcade.Sprite{
     }
     preUpdate(time: number, delta: number){
         super.preUpdate(time, delta);
+        if(this.health<0){
+            this.setVelocity(0,0);
+            if(Date.now()-this.time>300)
+                this.destroy();
+            return;
+        }
+
         if(this.target!=undefined){
             this.targetx = this.target.x;
             this.targety = this.target.y+24;
@@ -40,7 +48,8 @@ export default class Flyer extends Phaser.Physics.Arcade.Sprite{
     hit(damage: number){
         this.health-=damage;
         if(this.health<0){
-            this.destroy();
+            this.time = Date.now();
+            this.anims.play("flyer_dead");                
         }
     }
 }

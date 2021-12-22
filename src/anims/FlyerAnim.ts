@@ -7,7 +7,11 @@ const createFlyerAnims = (anims: Phaser.Animations.AnimationManager) =>{
         repeat: -1,
         frameRate: 10
     })
-
+    anims.create({
+        key: "flyer_dead",
+        frames: anims.generateFrameNames("flyer_ded",{ start:1 , end:4, prefix: "sprite_"}),
+        frameRate: 10
+    })
 }
 export {
     createFlyerAnims
