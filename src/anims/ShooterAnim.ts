@@ -9,14 +9,14 @@ const createShooterAnims = (anims: Phaser.Animations.AnimationManager) =>{
     })
     anims.create({
         key: "shooter_shoot",
-        frames: anims.generateFrameNames("shooter_shoot",{ start:1 , end:2, prefix: "hurt"}),
-        frameRate: 10,
+        frames: anims.generateFrameNames("shooter_shoot",{ start:0 , end:4, prefix: "hurt"}),
+        frameRate: 13,
         yoyo: true
     })
     anims.create({
         key: "shooter_dead",
         frames: anims.generateFrameNames("shooter_dead",{ start:1 , end:6, prefix: "death"}),
-        frameRate: 10,
+        frameRate: 30,
     })
    
 }

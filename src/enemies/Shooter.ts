@@ -50,7 +50,7 @@ export default class Shooter extends Phaser.Physics.Arcade.Sprite{
                 magic.setVector(vec);
 
                 magic.setVelocity(vec.normalize().x*1000,vec.normalize().y*1000);
-            } else if(Date.now()-this.time<250) this.anims.play("shooter_idle",true);
+            } else if(Date.now()-this.time<350) this.anims.play("shooter_idle");
 
             if(vec.normalize().x<0){
                 this.setFlipX(true);
