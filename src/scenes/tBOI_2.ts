@@ -172,9 +172,9 @@ export default class tBOI_2 extends Phaser.Scene
         this.flyers = this.physics.add.group({
             classType: Flyer
         })
-        this.flyers.get(320,320,"flyer");
-        this.flyers.get(500,320,"flyer");
-        this.flyers.get(320,400,"flyer");
+        //this.flyers.get(320,320,"flyer");
+        //this.flyers.get(500,320,"flyer");
+        //this.flyers.get(320,400,"flyer");
         this.flyers.children.each(p => {
             const flyer = p as Flyer;
             this.physics.add.collider(p, this.knight, handlePlayerEnemiesCollision);

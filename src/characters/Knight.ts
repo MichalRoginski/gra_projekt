@@ -1,4 +1,5 @@
 import Phaser, { Data, Physics, Time } from "phaser";
+import Chest from "~/item/Chest";
 import Arrow from "../characters/Arrow"
 
 declare global {
@@ -23,10 +24,18 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
     private power = 51;
     private healthState = HealthState.IDLE;
     private damageTime = 0;
+    private ability_to_open = false;
+    private handleOpenTime = 0;
     private _health = 3
+    private _coins = 0;
+    private activeChest?: Chest;
 
     get health(){
         return this._health;
+    }
+    
+    setChest(chest: Chest){
+        this.activeChest = chest;
     }
 
     constructor(scene: Phaser.Scene, x:number, y:number, texture:string, frame?:string | number)
@@ -50,9 +59,15 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
 
         --this._health;
 
-        if(this._health == 0){
-            
+       
+    }
+
+    handleChestOpen (){
+        if(this.ability_to_open == true){
+            return;
         }
+        this.ability_to_open = true;
+        this.handleOpenTime = 0;
     }
 
     preUpdate(t: number, dt: number){
@@ -71,6 +86,19 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
                 }
                 break
         }
+        switch (this.ability_to_open)
+        {
+            case false:
+                break
+            case true:
+                this.handleOpenTime += dt;
+                if (this.handleOpenTime >= 1000)
+                {
+                    this.ability_to_open = false;
+                    this.handleOpenTime = 0;
+                }
+                break
+        }
     }
 
     update(cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene){
@@ -86,6 +114,16 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
         if(!cursors)
         {
             return
+        }
+        if(Phaser.Input.Keyboard.JustDown(cursors.space!)){
+            if(this.activeChest){
+                const coins = this.activeChest.open();
+                this._coins+=coins;
+                console.log(this._coins);
+                
+                return;
+            }
+            return;
         }
         
         const speed = 300;

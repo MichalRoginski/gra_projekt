@@ -12,9 +12,12 @@ import { createSpikeAnims } from '../anims/SpikeAnim'
 import Spike from '../enemies/Spike'
 import { handlePlayerEnemiesCollision, handlePlayerShooterCollision, handlePlayerProjectileCollision } from '../utils/EnemiesCollided'
 import { handlePlayerSpikeCollision } from '../utils/SpikesCollided'
+import { handlePlayerChestCollision } from '../utils/ChestColliede'
 import Shooter from '../enemies/Shooter'
 import { createShooterAnims } from '../anims/ShooterAnim'
 import Magic from '~/enemies/Magic'
+import { createChestAnims } from '../anims/ChestAnim'
+import Chest from '../item/Chest'
 
 export default class tBOI extends Phaser.Scene
 {
@@ -53,6 +56,13 @@ export default class tBOI extends Phaser.Scene
         const backwalls = map.createLayer("backwalls", tileset);
         const walls = map.createLayer("walls", tileset);
         walls.setCollisionByProperty({collides:true});
+
+        createChestAnims(this.anims);
+        //const chest = this.add.sprite(790, 585, 'chest_open', 'chest_full_open_anim_f0');
+        const chests = this.physics.add.staticGroup({
+            classType: Chest
+        });
+        const chest1 = chests.get(790, 585, "chest_open");
 
         walls.setScale(3);
         backwalls.setScale(3);
@@ -150,6 +160,7 @@ export default class tBOI extends Phaser.Scene
         })
         const test = spikes.get(600,600,"spike");
         this.physics.add.collider(spikes, this.knight, handlePlayerSpikeCollision);
+
 
         createShooterAnims(this.anims);
         this.shooters = this.physics.add.group({
