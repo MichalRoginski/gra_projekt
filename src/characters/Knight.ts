@@ -1,7 +1,7 @@
 import Phaser, { Data, Physics, Time } from "phaser";
 import Chest from "~/item/Chest";
 import Arrow from "../characters/Arrow"
-
+import { sceneEvents } from '../events/EventsCenter'
 declare global {
     namespace Phaser.GameObjects{
         interface GameObjectFactory
@@ -24,14 +24,25 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
     private power = 51;
     private healthState = HealthState.IDLE;
     private damageTime = 0;
-    private ability_to_open = false;
-    private handleOpenTime = 0;
     private _health = 3
     private _coins = 0;
     private activeChest?: Chest;
 
     get health(){
         return this._health;
+    }
+    get coins(){
+        return this._coins;
+    }
+
+    setHealth(health){
+        this._health = health;
+        console.log(health);
+        
+    }
+
+    setCoin(coin){
+        this._coins = coin;
     }
     
     setChest(chest: Chest){
@@ -62,14 +73,6 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
        
     }
 
-    handleChestOpen (){
-        if(this.ability_to_open == true){
-            return;
-        }
-        this.ability_to_open = true;
-        this.handleOpenTime = 0;
-    }
-
     preUpdate(t: number, dt: number){
         super.preUpdate(t, dt);
         switch (this.healthState)
@@ -83,19 +86,6 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
                     this.healthState = HealthState.IDLE;
                     this.setTint(0xffffff);
                     this.damageTime = 0;
-                }
-                break
-        }
-        switch (this.ability_to_open)
-        {
-            case false:
-                break
-            case true:
-                this.handleOpenTime += dt;
-                if (this.handleOpenTime >= 1000)
-                {
-                    this.ability_to_open = false;
-                    this.handleOpenTime = 0;
                 }
                 break
         }
@@ -119,8 +109,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
             if(this.activeChest){
                 const coins = this.activeChest.open();
                 this._coins+=coins;
-                console.log(this._coins);
-                
+                sceneEvents.emit('player-coins-changed', this._coins);
                 return;
             }
             return;

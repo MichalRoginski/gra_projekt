@@ -23,6 +23,7 @@ export default class Preloader extends Phaser.Scene{
         this.load.atlas("shooter_dead","enemies/shooter_dead.png","enemies/shooter_dead_atlas.json");
         this.load.atlas("chest_open", "ui/chest_open.png", "ui/chest_open_atlas.json");
 
+        this.load.image("chest_closed", "ui/chest_mimic_open_anim_f0.png");
         this.load.image("magic","weapons/Magic_Attack1.png");
         this.load.image("arrow", "weapons/weapon_arrow.png");
 
@@ -33,7 +34,7 @@ export default class Preloader extends Phaser.Scene{
     }
     create(){
         console.log("<preload>");
-        this.scene.start('tBOI_2',{x:600, y:384, knight: undefined});
+        this.scene.start('tBOI_2',{x:600, y:384, health: 3, coins: 0});
         console.log("</preload>");
     }
 }

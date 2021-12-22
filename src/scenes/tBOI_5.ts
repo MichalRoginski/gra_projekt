@@ -26,7 +26,7 @@ export default class tBOI_5 extends Phaser.Scene
     private open = false;
     private exits!: Phaser.Physics.Arcade.Group
     private gameOver = false;
-    private knightPos = {x:600,y:300};
+    private knightPos = {x:600,y:300, health: 3, coins: 0};
 
     
 	constructor()
@@ -40,10 +40,10 @@ export default class tBOI_5 extends Phaser.Scene
 
     }
     init(knight){
-        if(knight.knight!=undefined)
-            this.knight=knight.knight;
         this.knightPos.x = knight.x
         this.knightPos.y = knight.y;
+        this.knightPos.health = knight.health;
+        this.knightPos.coins = knight.coins;
         if(knight.x<72)
             this.knightPos.x = 1124;
         if(knight.y<72)
@@ -79,8 +79,9 @@ export default class tBOI_5 extends Phaser.Scene
         this.cursors.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         createKnightAnims(this.anims);
-        if(this.knight==undefined)
         this.knight = this.add.knight(this.knightPos.x, this.knightPos.y, 'knight');
+        this.knight.setCoin(this.knightPos.coins);
+        this.knight.setHealth(this.knightPos.health);
 
         this.physics.add.collider(this.knight, walls);     
         
@@ -258,7 +259,7 @@ export default class tBOI_5 extends Phaser.Scene
                 exit.setScale(3);
                 this.physics.add.collider(this.knight, exit,() => {
                     console.log("test");
-                    this.scene.start("tBOI_2",{x: this.knight.x, y: this.knight.y, knight: this.knight});
+                    this.scene.start("tBOI_2",{x: this.knight.x, y: this.knight.y,  health: this.knight.health, coins: this.knight.coins});
                 });
                 exit.setImmovable();
                 this.exits.add(exit);
