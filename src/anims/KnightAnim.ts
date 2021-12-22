@@ -7,7 +7,7 @@ const createKnightAnims = (anims: Phaser.Animations.AnimationManager) =>{
 
     anims.create({
         key: 'knight-run',
-        frames: anims.generateFrameNames('knight', { start:0, end:3, prefix:'knight_f_run_anim_f' }),
+        frames: anims.generateFrameNames('knight', { start:0, end:3, prefix:'knight_f_run_anim_f'}),
         repeat: -1,
         frameRate: 15
     })

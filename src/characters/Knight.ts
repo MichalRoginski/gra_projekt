@@ -23,6 +23,12 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
     private power = 34;
     private healthState = HealthState.IDLE;
     private damageTime = 0;
+    private _health = 3
+
+    get health(){
+        return this._health;
+    }
+
     constructor(scene: Phaser.Scene, x:number, y:number, texture:string, frame?:string | number)
     {
         super(scene, x, y, texture, frame)
@@ -34,10 +40,20 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
 
     handleDamage(dir: Phaser.Math.Vector2){
         
+        if(this.healthState == HealthState.DAMAGE){
+            return;
+        }
         this.setVelocity(dir.x, dir.y);
         this.setTint(0xff0000);
 
         this.healthState = HealthState.DAMAGE;
+        this.damageTime = 0;
+
+        --this._health;
+
+        if(this._health == 0){
+            
+        }
     }
 
     preUpdate(t: number, dt: number){

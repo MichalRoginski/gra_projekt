@@ -7,6 +7,7 @@ import "../characters/Knight"
 import Knight from '../characters/Knight'
 import {ArrowEnemyCollisionHandler, ArrowWallCollisionHandler} from "../utils/ArrowCollided"
 import Arrow from '~/characters/Arrow'
+import { sceneEvents } from '../events/EventsCenter'
 
 export default class tBOI extends Phaser.Scene
 {
@@ -26,6 +27,7 @@ export default class tBOI extends Phaser.Scene
 
     create()
     {
+        this.scene.run('game-ui');
         this.physics.world.setFPS(240);
         console.log("<game>");
         const map = this.make.tilemap({key: 'debug_dungeon'});
@@ -55,8 +57,8 @@ export default class tBOI extends Phaser.Scene
         })
         
         flyers.get(320,320,"flyer");
-        flyers.get(500,320,"flyer");
-        flyers.get(320,400,"flyer");
+        //flyers.get(500,320,"flyer");
+        //flyers.get(320,400,"flyer");
         flyers.children.each(p => {
             const flyer = p as Flyer;
             this.physics.add.collider(p, this.knight, this.handlePlayerEnemiesCollision, undefined, this);
@@ -92,6 +94,8 @@ export default class tBOI extends Phaser.Scene
         const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(600);
 
         this.knight.handleDamage(dir);
+
+        sceneEvents.emit('player-health-change', this.knight.health);
     }
 
     update(t: number, dt: number) {
