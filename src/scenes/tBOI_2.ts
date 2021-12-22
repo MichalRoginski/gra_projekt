@@ -39,16 +39,18 @@ export default class tBOI_2 extends Phaser.Scene
 
     }
     init(knight){
-        this.knightPos.x = knight.x;
+        if(knight.knight!=undefined)
+            this.knight=knight.knight;
+        this.knightPos.x = knight.x
         this.knightPos.y = knight.y;
         if(knight.x<72)
-            this.knightPos.x = 1128;
+            this.knightPos.x = 1124;
         if(knight.y<72)
-            this.knightPos.y = 648;
+            this.knightPos.y = 644;
         if(knight.x>1128)
-            this.knightPos.x = 72;
+            this.knightPos.x = 76;
         if(knight.y>648)
-            this.knightPos.y = 71;
+            this.knightPos.y = 76;
     }
     create()
     {
@@ -76,7 +78,8 @@ export default class tBOI_2 extends Phaser.Scene
         this.cursors.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         createKnightAnims(this.anims);
-        this.knight = this.add.knight(this.knightPos.x, this.knightPos.y, 'knight');
+        if(this.knight==undefined)
+            this.knight = this.add.knight(this.knightPos.x, this.knightPos.y, 'knight');
 
         this.physics.add.collider(this.knight, walls);     
         
@@ -270,7 +273,7 @@ export default class tBOI_2 extends Phaser.Scene
                 exit.setScale(3);
                 this.physics.add.collider(this.knight, exit,() => {
                     console.log("test");
-                    this.scene.start(teleport,{x: this.knight.x, y: this.knight.y});
+                    this.scene.start(teleport,{x: this.knight.x, y: this.knight.y, knight: this.knight});
                 });
                 exit.setImmovable();
                 this.exits.add(exit);

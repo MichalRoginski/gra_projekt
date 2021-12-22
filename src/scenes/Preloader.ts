@@ -33,7 +33,7 @@ export default class Preloader extends Phaser.Scene{
     }
     create(){
         console.log("<preload>");
-        this.scene.start('tBOI_2',{x:600, y:384});
+        this.scene.start('tBOI_2',{x:600, y:384, knight: undefined});
         console.log("</preload>");
     }
 }

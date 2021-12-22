@@ -43,16 +43,18 @@ export default class tBOI extends Phaser.Scene
 
     }
     init(knight){
-        this.knightPos.x = knight.x;
+        if(knight.knight!=undefined)
+            this.knight=knight.knight;
+        this.knightPos.x = knight.x
         this.knightPos.y = knight.y;
         if(knight.x<72)
-            this.knightPos.x = 1128;
+            this.knightPos.x = 1124;
         if(knight.y<72)
-            this.knightPos.y = 648;
+            this.knightPos.y = 644;
         if(knight.x>1128)
-            this.knightPos.x = 72;
+            this.knightPos.x = 76;
         if(knight.y>648)
-            this.knightPos.y = 71;
+            this.knightPos.y = 76;
     }
     create()
     {
@@ -87,10 +89,12 @@ export default class tBOI extends Phaser.Scene
         this.cursors.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         createKnightAnims(this.anims);
+        if(this.knight==undefined)
         this.knight = this.add.knight(this.knightPos.x, this.knightPos.y, 'knight');
+        console.log("help");
 
         this.physics.add.collider(this.knight, walls);     
-        
+        console.log("help");
         this.borders = this.physics.add.group();
         this.exits = this.physics.add.group();
 
@@ -173,7 +177,7 @@ export default class tBOI extends Phaser.Scene
                 classType: Spike
             })
             if(this.open==false){
-                const test = spikes.get(600,600,"spike");
+                //const test = spikes.get(600,600,"spike");
             }
             this.physics.add.collider(spikes, this.knight, handlePlayerSpikeCollision);
     
@@ -204,6 +208,10 @@ export default class tBOI extends Phaser.Scene
                 //this.flyers.get(320,320,"flyer");
                 //this.flyers.get(500,320,"flyer");
                 //this.flyers.get(320,400,"flyer");  
+                this.flyers.get(600,360,"flyer");
+                this.flyers.get(1080,216,"flyer");
+                this.flyers.get(1080,984,"flyer");  
+                this.flyers.get(600,408,"flyer"); 
             }
     
             this.flyers.children.each(p => {
@@ -272,7 +280,7 @@ export default class tBOI extends Phaser.Scene
                 exit.setScale(3);
                 this.physics.add.collider(this.knight, exit,() => {
                     console.log("test");
-                    this.scene.start("tBOI_2",{x: this.knight.x, y: this.knight.y});
+                    this.scene.start("tBOI_2",{x: this.knight.x, y: this.knight.y, knight: this.knight});
                 });
                 exit.setImmovable();
                 this.exits.add(exit);
