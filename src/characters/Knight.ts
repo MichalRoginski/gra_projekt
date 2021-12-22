@@ -39,11 +39,10 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
     }
 
     handleDamage(dir: Phaser.Math.Vector2){
-        
+        this.setVelocity(dir.x*600, dir.y*600);
         if(this.healthState == HealthState.DAMAGE){
             return;
         }
-        this.setVelocity(dir.x*600, dir.y*600);
         this.setTint(0xff0000);
 
         this.healthState = HealthState.DAMAGE;
@@ -64,7 +63,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
                 break
             case HealthState.DAMAGE:
                 this.damageTime += dt;
-                if (this.damageTime >= 250)
+                if (this.damageTime >= 750)
                 {
                     this.healthState = HealthState.IDLE;
                     this.setTint(0xffffff);
@@ -76,9 +75,13 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
 
     update(cursors: Phaser.Types.Input.Keyboard.CursorKeys, scene: Phaser.Scene){
         
-        if(this.healthState === HealthState.DAMAGE)
+        if(this.damageTime <=200 && this.healthState === HealthState.DAMAGE)
         {
             return
+        }
+        if(this.health == 0)
+        {
+            return;
         }
         if(!cursors)
         {

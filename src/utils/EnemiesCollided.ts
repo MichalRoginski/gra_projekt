@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Flyer from "../enemies/Flyer";
 import Knight from "../characters/Knight";
+import { sceneEvents } from "../events/EventsCenter"
 const handlePlayerEnemiesCollision = (obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject) =>{
     const flyer = obj1 as Flyer 
     const knight = obj2 as Knight
@@ -11,6 +12,7 @@ const handlePlayerEnemiesCollision = (obj1: Phaser.GameObjects.GameObject, obj2:
     const dir = new Phaser.Math.Vector2(dx, dy).normalize();
 
     knight.handleDamage(dir);
+    sceneEvents.emit('player-health-change', knight.health);
 }
 export {
     handlePlayerEnemiesCollision

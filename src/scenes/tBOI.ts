@@ -17,6 +17,7 @@ export default class tBOI extends Phaser.Scene
 {
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
     private knight!: Knight
+    private gameOver = false;
     
 	constructor()
 	{
@@ -113,6 +114,20 @@ export default class tBOI extends Phaser.Scene
     update(t: number, dt: number) {
         if(this.knight){
             this.knight.update(this.cursors, this);
+        }
+        if(this.knight.health == 0){
+            this.knight.body.enable = false;
+            if(!this.gameOver){
+                this.tweens.add({
+                    targets: this.knight,
+                    //alpha: 0,
+                    angle: -90,
+                    x: this.knight.x-50,
+                    y: this.knight.y+50,
+                    duration: 1000
+                });
+                this.gameOver = true;
+            }
         }
     }
 }
