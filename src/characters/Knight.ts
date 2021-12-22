@@ -20,7 +20,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
 {
     private lastShot = Date.now();
     private friendlyProjectiles?: Phaser.Physics.Arcade.Group;
-    private power = 34;
+    private power = 51;
     private healthState = HealthState.IDLE;
     private damageTime = 0;
     private _health = 3
@@ -180,6 +180,7 @@ Phaser.GameObjects.GameObjectFactory.register('knight', function (this:Phaser.Ga
 
     this.scene.physics.world.enableBody(sprite, Phaser.Physics.Arcade.DYNAMIC_BODY);
 
+    sprite.setImmovable();
     sprite.setScale(3);
     sprite.setSize(sprite.width*0.6, sprite.height*0.2);
     sprite.body.setOffset(3, 20);

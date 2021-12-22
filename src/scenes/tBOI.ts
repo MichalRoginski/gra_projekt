@@ -5,19 +5,24 @@ import {createFlyerAnims} from "../anims/FlyerAnim"
 import {createKnightAnims} from "../anims/KnightAnim"
 import "../characters/Knight"
 import Knight from '../characters/Knight'
-import {ArrowEnemyCollisionHandler, ArrowWallCollisionHandler} from "../utils/ArrowCollided"
+import {ArrowEnemyCollisionHandler, ArrowShooterCollisionHandler, ArrowWallCollisionHandler} from "../utils/ArrowCollided"
 import { sceneEvents } from '../events/EventsCenter'
 import Arrow from '../characters/Arrow'
 import { createSpikeAnims } from '../anims/SpikeAnim'
 import Spike from '../enemies/Spike'
-import { handlePlayerEnemiesCollision } from '../utils/EnemiesCollided'
+import { handlePlayerEnemiesCollision, handlePlayerShooterCollision, handlePlayerProjectileCollision } from '../utils/EnemiesCollided'
 import { handlePlayerSpikeCollision } from '../utils/SpikesCollided'
+import Shooter from '../enemies/Shooter'
+import { createShooterAnims } from '../anims/ShooterAnim'
+import Magic from '~/enemies/Magic'
 
 export default class tBOI extends Phaser.Scene
 {
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
     private knight!: Knight
     private flyers!: Phaser.Physics.Arcade.Group
+    private shooters!: Phaser.Physics.Arcade.Group
+
     private gameOver = false;
     
 	constructor()
@@ -41,6 +46,7 @@ export default class tBOI extends Phaser.Scene
         const ground = map.createLayer("ground", tileset);
         const traps = this.add.layer();
         const enemies = this.add.layer();
+        const player = this.add.layer(this.knight);
         const backwalls = map.createLayer("backwalls", tileset);
         const walls = map.createLayer("walls", tileset);
         walls.setCollisionByProperty({collides:true});
@@ -69,14 +75,30 @@ export default class tBOI extends Phaser.Scene
         const test = spikes.get(600,600,"spike");
         this.physics.add.collider(spikes, this.knight, handlePlayerSpikeCollision);
 
+        createShooterAnims(this.anims);
+        this.shooters = this.physics.add.group({
+            classType: Shooter
+        })
+        this.shooters.get(500,500,"shooter");
+        const enemyProjectiles = this.physics.add.group({
+            classType: Magic
+        })
+        this.physics.add.collider(enemyProjectiles , this.knight, handlePlayerProjectileCollision);
+
+        this.physics.add.collider(walls , enemyProjectiles, ArrowWallCollisionHandler);
+        this.physics.add.collider(this.shooters , this.knight, handlePlayerShooterCollision);
+        this.shooters.children.each(p => {
+            const shooter = p as Shooter;
+            shooter.setTarget(this.knight, enemyProjectiles);
+        })
 
         createFlyerAnims(this.anims);
         this.flyers = this.physics.add.group({
             classType: Flyer
         })
-        this.flyers.get(320,320,"flyer");
-        this.flyers.get(500,320,"flyer");
-        this.flyers.get(320,400,"flyer");
+        //this.flyers.get(320,320,"flyer");
+        //this.flyers.get(500,320,"flyer");
+        //this.flyers.get(320,400,"flyer");
         this.flyers.children.each(p => {
             const flyer = p as Flyer;
             this.physics.add.collider(p, this.knight, handlePlayerEnemiesCollision);
@@ -99,14 +121,16 @@ export default class tBOI extends Phaser.Scene
         })
         this.physics.add.collider(friendlyProjectiles, this.flyers, ArrowEnemyCollisionHandler);
         this.physics.add.collider(friendlyProjectiles, walls, ArrowWallCollisionHandler);
+        this.physics.add.collider(friendlyProjectiles, this.shooters, ArrowShooterCollisionHandler);
+
         this.knight.setFriendlyProjectiles(friendlyProjectiles);
 
         spikes.children.each(p => {
             const spike = p as Flyer;
             traps.add(spike);
         })
+        
 
-        enemies.add(this.knight);
         this.flyers.children.each(p => {
             const flyer = p as Flyer;
             enemies.add(flyer);
