@@ -26,6 +26,7 @@ export default class tBOI_2 extends Phaser.Scene
     private open = false;
     private exits!: Phaser.Physics.Arcade.Group
     private gameOver = false;
+    private knightPos = {x:600,y:300};
     
 	constructor()
 	{
@@ -37,7 +38,18 @@ export default class tBOI_2 extends Phaser.Scene
         this.cursors = this.input.keyboard.createCursorKeys()
 
     }
-
+    init(knight){
+        this.knightPos.x = knight.x;
+        this.knightPos.y = knight.y;
+        if(knight.x<72)
+            this.knightPos.x = 1128;
+        if(knight.y<72)
+            this.knightPos.y = 648;
+        if(knight.x>1128)
+            this.knightPos.x = 72;
+        if(knight.y>648)
+            this.knightPos.y = 71;
+    }
     create()
     {
         this.scene.run('game-ui');
@@ -64,13 +76,13 @@ export default class tBOI_2 extends Phaser.Scene
         this.cursors.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         createKnightAnims(this.anims);
-        this.knight = this.add.knight(128, 128, 'knight');
+        this.knight = this.add.knight(this.knightPos.x, this.knightPos.y, 'knight');
 
         this.physics.add.collider(this.knight, walls);     
         
         this.borders = this.physics.add.group();
         this.exits = this.physics.add.group();
-
+        if(true){
         const border1 = this.physics.add.sprite(24,360,"spike","floor_spikes_anim_f3");
         border1.setScale(3);
         this.physics.add.collider(this.knight, border1, handlePlayerSpikeCollision);
@@ -141,21 +153,35 @@ export default class tBOI_2 extends Phaser.Scene
         border10.setImmovable();
         border.add(border10);
         this.borders.add(border10);
-
+        }
         
 
         createSpikeAnims(this.anims);
         const spikes = this.physics.add.group({
             classType: Spike
         })
-        //const test = spikes.get(600,600,"spike");
+        if(this.open==false){
+            let test = spikes.get(504,264,"spike");
+            test = spikes.get(552,216,"spike");
+            test = spikes.get(600,216,"spike");
+            test = spikes.get(648,216,"spike");
+            test = spikes.get(696,264,"spike");
+
+            test = spikes.get(504,456,"spike");
+            test = spikes.get(552,504,"spike");
+            test = spikes.get(600,504,"spike");
+            test = spikes.get(648,504,"spike");
+            test = spikes.get(696,456,"spike");
+        }
         this.physics.add.collider(spikes, this.knight, handlePlayerSpikeCollision);
 
         createShooterAnims(this.anims);
         this.shooters = this.physics.add.group({
             classType: Shooter
         })
-        //this.shooters.get(500,500,"shooter");
+        if(this.open==false){
+            //this.shooters.get(500,500,"shooter");
+        }
         const enemyProjectiles = this.physics.add.group({
             classType: Magic
         })
@@ -172,9 +198,12 @@ export default class tBOI_2 extends Phaser.Scene
         this.flyers = this.physics.add.group({
             classType: Flyer
         })
-        //this.flyers.get(320,320,"flyer");
-        //this.flyers.get(500,320,"flyer");
-        //this.flyers.get(320,400,"flyer");
+        if(this.open==false){
+            //this.flyers.get(320,320,"flyer");
+            //this.flyers.get(500,320,"flyer");
+            //this.flyers.get(320,400,"flyer");  
+        }
+
         this.flyers.children.each(p => {
             const flyer = p as Flyer;
             this.physics.add.collider(p, this.knight, handlePlayerEnemiesCollision);
@@ -221,7 +250,7 @@ export default class tBOI_2 extends Phaser.Scene
         if(this.knight){
             this.knight.update(this.cursors, this);
         }
-        if(this.open==false&&this.shooters.getLength()<=0&&this.flyers.getLength()<=0){
+        if(this.shooters.getLength()<=0&&this.flyers.getLength()<=0){
             this.borders.children.each(p => {
                 const border = p as Phaser.Physics.Arcade.Sprite;
                 let teleport;
@@ -241,7 +270,7 @@ export default class tBOI_2 extends Phaser.Scene
                 exit.setScale(3);
                 this.physics.add.collider(this.knight, exit,() => {
                     console.log("test");
-                    this.scene.start(teleport);
+                    this.scene.start(teleport,{x: this.knight.x, y: this.knight.y});
                 });
                 exit.setImmovable();
                 this.exits.add(exit);
