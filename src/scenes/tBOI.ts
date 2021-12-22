@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import Phaser, { Game, Physics } from 'phaser'
 import {debugDraw} from "../utils/debug"
 import Flyer from "../enemies/Flyer"
 import {createFlyerAnims} from "../anims/FlyerAnim"
@@ -17,6 +17,7 @@ export default class tBOI extends Phaser.Scene
 {
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
     private knight!: Knight
+    private flyers!: Phaser.Physics.Arcade.Group
     private gameOver = false;
     
 	constructor()
@@ -38,10 +39,14 @@ export default class tBOI extends Phaser.Scene
         const map = this.make.tilemap({key: 'debug_dungeon'});
         const tileset = map.addTilesetImage('debug_dungeon2', 'tiles');
         const ground = map.createLayer("ground", tileset);
+        const traps = this.add.layer();
+        const enemies = this.add.layer();
+        const backwalls = map.createLayer("backwalls", tileset);
         const walls = map.createLayer("walls", tileset);
         walls.setCollisionByProperty({collides:true});
 
         walls.setScale(3);
+        backwalls.setScale(3);
         ground.setScale(3);
 
         this.cursors.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -53,6 +58,8 @@ export default class tBOI extends Phaser.Scene
         this.knight = this.add.knight(128, 128, 'knight');
 
         this.physics.add.collider(this.knight, walls);
+
+
         
 
         createSpikeAnims(this.anims);
@@ -64,25 +71,25 @@ export default class tBOI extends Phaser.Scene
 
 
         createFlyerAnims(this.anims);
-        const flyers = this.physics.add.group({
+        this.flyers = this.physics.add.group({
             classType: Flyer
         })
-        
-        flyers.get(320,320,"flyer");
+        this.flyers.get(320,320,"flyer");
         //flyers.get(500,320,"flyer");
         //flyers.get(320,400,"flyer");
-        flyers.children.each(p => {
+        this.flyers.children.each(p => {
             const flyer = p as Flyer;
             this.physics.add.collider(p, this.knight, handlePlayerEnemiesCollision);
             this.physics.add.collider(p, walls);
-            flyers.children.each(x => {
+            this.flyers.children.each(x => {
                 const secondFlyer = x as Flyer;
                 if(x != p){
-                    this.physics.add.collider(x, p);
+                    this.physics.add.collider(secondFlyer, flyer);
                 } 
             })
         })
-        flyers.children.each(p => {
+        
+        this.flyers.children.each(p => {
             const flyer = p as Flyer;
             flyer.setTarget(this.knight);
         })
@@ -90,33 +97,37 @@ export default class tBOI extends Phaser.Scene
         const friendlyProjectiles = this.physics.add.group({
             classType: Arrow
         })
-        this.physics.add.collider(friendlyProjectiles, flyers, ArrowEnemyCollisionHandler);
+        this.physics.add.collider(friendlyProjectiles, this.flyers, ArrowEnemyCollisionHandler);
         this.physics.add.collider(friendlyProjectiles, walls, ArrowWallCollisionHandler);
         this.knight.setFriendlyProjectiles(friendlyProjectiles);
 
+        spikes.children.each(p => {
+            const spike = p as Flyer;
+            traps.add(spike);
+        })
 
-        debugDraw(walls, this); //comment/uncomment for drawing debug        
+        enemies.add(this.knight);
+        this.flyers.children.each(p => {
+            const flyer = p as Flyer;
+            enemies.add(flyer);
+        })
+
+        //debugDraw(walls, this); //comment/uncomment for drawing debug        
         console.log("</game>");
 
     }
-
-    // private handlePlayerEnemiesCollision(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject){
-    //     const flyer = obj1 as Flyer 
-        
-    //     const dx = this.knight.x-flyer.x;
-    //     const dy = this.knight.y-flyer.y;
-
-    //     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(600);
-
-    //     this.knight.handleDamage(dir);
-    // }
 
     update(t: number, dt: number) {
         if(this.knight){
             this.knight.update(this.cursors, this);
         }
         if(this.knight.health == 0){
+            this.flyers.children.each(p => {
+                const flyer = p as Flyer;
+                flyer.removeTarget();
+            })
             this.knight.body.enable = false;
+            this.knight.anims.play("knight-idle");
             if(!this.gameOver){
                 this.tweens.add({
                     targets: this.knight,
