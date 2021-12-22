@@ -58,7 +58,6 @@ export default class tBOI extends Phaser.Scene
     }
     create()
     {
-        this.scene.run('game-ui');
         this.physics.world.setFPS(240);
         console.log("<game>");
         const map = this.make.tilemap({key: 'dungeon_1'});
@@ -212,7 +211,7 @@ export default class tBOI extends Phaser.Scene
                 //this.flyers.get(320,400,"flyer");  
                 this.flyers.get(600,360,"flyer");
                 this.flyers.get(1080,216,"flyer");
-                this.flyers.get(1080,984,"flyer");  
+                this.flyers.get(1080,600,"flyer");  
                 this.flyers.get(600,408,"flyer"); 
             }
     
@@ -253,7 +252,7 @@ export default class tBOI extends Phaser.Scene
                 enemies.add(flyer);
             })
     
-            debugDraw(walls, this); //comment/uncomment for drawing debug    
+            //debugDraw(walls, this); //comment/uncomment for drawing debug    
         console.log("</game>");
 
     }

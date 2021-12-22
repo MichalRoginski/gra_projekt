@@ -37,12 +37,13 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
 
     setHealth(health){
         this._health = health;
-        console.log(health);
+        sceneEvents.emit('player-health-change', this._health);
         
     }
 
     setCoin(coin){
         this._coins = coin;
+        sceneEvents.emit('player-coins-changed', this._coins);
     }
     
     setChest(chest: Chest){

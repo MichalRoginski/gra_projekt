@@ -33,8 +33,10 @@ export default class Preloader extends Phaser.Scene{
 
     }
     create(){
+
         console.log("<preload>");
         this.scene.start('tBOI_2',{x:600, y:384, health: 3, coins: 0});
+        this.scene.run('game-ui');
         console.log("</preload>");
     }
 }

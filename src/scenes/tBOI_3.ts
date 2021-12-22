@@ -55,7 +55,6 @@ export default class tBOI_3 extends Phaser.Scene
     }
     create()
     {
-        this.scene.run('game-ui');
         this.physics.world.setFPS(240);
         console.log("<game>");
         const map = this.make.tilemap({key: 'dungeon_3'});
@@ -237,7 +236,7 @@ export default class tBOI_3 extends Phaser.Scene
                 enemies.add(flyer);
             })
     
-            debugDraw(walls, this); //comment/uncomment for drawing debug       
+            //debugDraw(walls, this); //comment/uncomment for drawing debug       
         console.log("</game>");
 
     }
