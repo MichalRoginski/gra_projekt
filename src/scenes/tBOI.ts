@@ -6,8 +6,12 @@ import {createKnightAnims} from "../anims/KnightAnim"
 import "../characters/Knight"
 import Knight from '../characters/Knight'
 import {ArrowEnemyCollisionHandler, ArrowWallCollisionHandler} from "../utils/ArrowCollided"
-import Arrow from '~/characters/Arrow'
 import { sceneEvents } from '../events/EventsCenter'
+import Arrow from '../characters/Arrow'
+import { createSpikeAnims } from '../anims/SpikeAnim'
+import Spike from '../enemies/Spike'
+import { handlePlayerEnemiesCollision } from '../utils/EnemiesCollided'
+import { handlePlayerSpikeCollision } from '../utils/SpikesCollided'
 
 export default class tBOI extends Phaser.Scene
 {
@@ -50,9 +54,16 @@ export default class tBOI extends Phaser.Scene
         this.physics.add.collider(this.knight, walls);
         
 
+        createSpikeAnims(this.anims);
+        const spikes = this.physics.add.group({
+            classType: Spike
+        })
+        const test = spikes.get(600,600,"spike");
+        this.physics.add.collider(spikes, this.knight, handlePlayerSpikeCollision);
+
 
         createFlyerAnims(this.anims);
-                const flyers = this.physics.add.group({
+        const flyers = this.physics.add.group({
             classType: Flyer
         })
         
@@ -61,7 +72,7 @@ export default class tBOI extends Phaser.Scene
         //flyers.get(320,400,"flyer");
         flyers.children.each(p => {
             const flyer = p as Flyer;
-            this.physics.add.collider(p, this.knight, this.handlePlayerEnemiesCollision, undefined, this);
+            this.physics.add.collider(p, this.knight, handlePlayerEnemiesCollision);
             this.physics.add.collider(p, walls);
             flyers.children.each(x => {
                 const secondFlyer = x as Flyer;
@@ -81,22 +92,23 @@ export default class tBOI extends Phaser.Scene
         this.physics.add.collider(friendlyProjectiles, flyers, ArrowEnemyCollisionHandler);
         this.physics.add.collider(friendlyProjectiles, walls, ArrowWallCollisionHandler);
         this.knight.setFriendlyProjectiles(friendlyProjectiles);
+
+
         debugDraw(walls, this); //comment/uncomment for drawing debug        
         console.log("</game>");
+
     }
 
-    private handlePlayerEnemiesCollision(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject){
-        const flyer = obj1 as Flyer 
+    // private handlePlayerEnemiesCollision(obj1: Phaser.GameObjects.GameObject, obj2: Phaser.GameObjects.GameObject){
+    //     const flyer = obj1 as Flyer 
         
-        const dx = this.knight.x-flyer.x;
-        const dy = this.knight.y-flyer.y;
+    //     const dx = this.knight.x-flyer.x;
+    //     const dy = this.knight.y-flyer.y;
 
-        const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(600);
+    //     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(600);
 
-        this.knight.handleDamage(dir);
-
-        sceneEvents.emit('player-health-change', this.knight.health);
-    }
+    //     this.knight.handleDamage(dir);
+    // }
 
     update(t: number, dt: number) {
         if(this.knight){

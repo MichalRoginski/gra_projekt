@@ -43,7 +43,7 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
         if(this.healthState == HealthState.DAMAGE){
             return;
         }
-        this.setVelocity(dir.x, dir.y);
+        this.setVelocity(dir.x*600, dir.y*600);
         this.setTint(0xff0000);
 
         this.healthState = HealthState.DAMAGE;
@@ -172,14 +172,14 @@ export default class Knight extends Phaser.Physics.Arcade.Sprite
 Phaser.GameObjects.GameObjectFactory.register('knight', function (this:Phaser.GameObjects.GameObjectFactory, x: number, y:number, texture:string, frame?:string|number){
     var sprite = new Knight(this.scene, x, y, texture, frame);
 
-        this.displayList.add(sprite);
-        this.updateList.add(sprite);
+    this.displayList.add(sprite);
+    this.updateList.add(sprite);
 
-        this.scene.physics.world.enableBody(sprite, Phaser.Physics.Arcade.DYNAMIC_BODY);
+    this.scene.physics.world.enableBody(sprite, Phaser.Physics.Arcade.DYNAMIC_BODY);
 
-        sprite.setScale(3);
-        sprite.setSize(sprite.width*0.6, sprite.height*0.2);
-        sprite.body.setOffset(3, 20);
+    sprite.setScale(3);
+    sprite.setSize(sprite.width*0.6, sprite.height*0.2);
+    sprite.body.setOffset(3, 20);
 
-        return sprite;
+    return sprite;
 })
