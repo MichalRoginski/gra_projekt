@@ -11,6 +11,8 @@ const handlePlayerEnemiesCollision = (obj1: Phaser.GameObjects.GameObject, obj2:
     const dy = (knight.y+20)-flyer.y;
     
     const dir = new Phaser.Math.Vector2(dx, dy).normalize();
+    console.log(knight.health);
+    
     knight.handleDamage(dir);
     sceneEvents.emit('player-health-change', knight.health);
 }
